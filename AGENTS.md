@@ -1,6 +1,6 @@
 # Agent instructions
 
-When a task uses a source pack produced by **Figma Agent Source Exporter**, load and follow:
+When a task uses a **Figma → Agent** source pack produced by Agent Source Exporter, load and follow:
 
 `skills/figma-source-implementation/SKILL.md`
 
@@ -15,7 +15,7 @@ Minimum operating rules:
 5. Use exported static assets exactly; do not redraw, approximate, or replace them without evidence.
 6. Treat `frames/**` as visual ground truth, never as a production implementation asset.
 7. Do not translate the Figma node tree literally into application architecture.
-8. Run the implementation and compare it at the exact source frame dimensions before declaring visual fidelity.
+8. Run the implementation and compare it at the exact source frame dimensions before declaring 1:1 visual fidelity.
 9. Review relevant `manifest.json.errors` and report unresolved evidence gaps instead of inventing values.
 
 For ordinary maintenance of this exporter repository, preserve the plugin's no-network, read-only-document behavior unless the task explicitly changes those constraints.
