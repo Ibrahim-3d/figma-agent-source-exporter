@@ -1,0 +1,52 @@
+name: Bug report
+description: Report an exporter, source-pack, build, or fidelity problem
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Figma → Agent. Do not upload confidential client designs or source packs to a public issue.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Describe the exporter or implementation problem.
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Export scope
+      options:
+        - Selection
+        - Current page
+        - Entire file
+        - Not applicable
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+      description: What should the source pack or resulting implementation have contained/done?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Provide safe reproduction steps, node types, relevant manifest errors, or a minimal non-confidential file description.
+  - type: checkboxes
+    id: impact
+    attributes:
+      label: Impact
+      options:
+        - label: This blocks or reduces 1:1 implementation fidelity
+        - label: This affects exported assets or structured source
+        - label: This affects installation/build/release behavior
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      placeholder: "e.g. v0.3.0"
