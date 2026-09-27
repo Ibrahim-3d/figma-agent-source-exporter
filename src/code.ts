@@ -847,7 +847,7 @@ function skillBody(): string {
 function agentReadme(scope: Scope): string {
   return `# Coding-agent source pack
 
-This ZIP was generated directly from the open Figma document by Agent Source Exporter v${VERSION}. It is an offline implementation reference and does not require Figma REST/MCP access.
+This source pack was generated directly from the open Figma document by Agent Source Exporter v${VERSION} for the Figma → Agent workflow. It is portable implementation evidence for 1:1 frontend work and requires no Figma REST API, MCP, Dev Mode, token, server, or upload after export.
 
 **Export scope:** ${scope}
 
