@@ -112,7 +112,7 @@ Render the implementation at the exact source dimensions and reconcile it
 against the matching frame reference before declaring the task complete.
 ```
 
-The source pack carries its own implementation instructions, so it remains useful outside this repository.
+The source pack carries its own implementation instructions, so it remains useful outside this repository. See [docs/AGENT_WORKFLOWS.md](docs/AGENT_WORKFLOWS.md) for copy-paste workflows for major coding agents.
 
 ---
 
@@ -338,7 +338,7 @@ AGENTS.md
 
 The exporter was originally developed as a standalone extension inside `Ibrahim-3d/Figma-local-MCP`, which was forked from `MiHarsh/Figma-local-MCP`. It was separated so the source-export and agent-implementation workflow could evolve independently.
 
-MIT licensed. See [LICENSE](LICENSE).
+Contributions are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md).\n\nMIT licensed. See [LICENSE](LICENSE).
 
 ---
 
