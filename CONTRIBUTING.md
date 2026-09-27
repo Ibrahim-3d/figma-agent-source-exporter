@@ -95,3 +95,8 @@ Include:
 - a minimal reproduction when possible.
 
 Do not attach confidential client source packs to public issues.
+
+
+## Releases
+
+Maintainers should follow [docs/RELEASING.md](docs/RELEASING.md). Every version requires curated product-facing release notes before CI will publish the GitHub Release.
