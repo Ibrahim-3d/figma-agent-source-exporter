@@ -1,0 +1,35 @@
+name: Feature request
+description: Propose an improvement to Figma → Agent
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What limitation in the current Figma → Agent workflow does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: Describe the smallest useful solution.
+    validations:
+      required: true
+  - type: checkboxes
+    id: value
+    attributes:
+      label: Primary value
+      options:
+        - label: Improves 1:1 visual fidelity
+        - label: Improves source-pack completeness
+        - label: Improves portability or agent independence
+        - label: Improves local/privacy behavior
+        - label: Improves installation or release UX
+        - label: Improves benchmarks, diagnostics, or verification
+  - type: textarea
+    id: tradeoffs
+    attributes:
+      label: Trade-offs / compatibility
+      description: Note any schema, performance, network, Figma API, or agent-specific implications.
