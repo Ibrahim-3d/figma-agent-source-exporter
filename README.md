@@ -338,7 +338,9 @@ AGENTS.md
 
 The exporter was originally developed as a standalone extension inside `Ibrahim-3d/Figma-local-MCP`, which was forked from `MiHarsh/Figma-local-MCP`. It was separated so the source-export and agent-implementation workflow could evolve independently.
 
-Contributions are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md).\n\nMIT licensed. See [LICENSE](LICENSE).
+Contributions are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+MIT licensed. See [LICENSE](LICENSE).
 
 ---
 
