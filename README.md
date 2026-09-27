@@ -1,29 +1,184 @@
-# Figma Agent Source Exporter
+# Figma → Agent
 
-A standalone Figma development plugin that exports the **actual open Figma document** into one offline ZIP for coding agents such as Codex, Claude Code, Astra, or other local/remote engineering workflows.
+**1:1 Figma → Frontend with any coding agent.**
 
-The goal is durable source handoff: export once from Figma, then let an agent inspect the design without requiring continued Figma REST or MCP access.
+[![CI](https://github.com/Ibrahim-3d/figma-agent-source-exporter/actions/workflows/ci.yml/badge.svg)](https://github.com/Ibrahim-3d/figma-agent-source-exporter/actions/workflows/ci.yml)
+[![Latest release](https://img.shields.io/github/v/release/Ibrahim-3d/figma-agent-source-exporter)](https://github.com/Ibrahim-3d/figma-agent-source-exporter/releases/latest)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## What it exports
+> **Stop giving AI screenshots. Give it the design.**
 
-- entire-file, current-page, or current-selection scope;
-- exact 1× frame renders by default, with optional 2× references;
-- original image-fill bytes with PNG/JPEG/GIF/WebP format detection where possible;
-- likely icon/logo SVG exports;
-- local variables and modes;
+Agent Source Exporter turns the actual open Figma document into a portable, agent-ready source pack containing the structured design, original assets, design-system evidence, exact reference renders, and an implementation protocol for visual verification.
+
+Use that pack with **Codex, Claude Code, Cursor, Windsurf, Gemini CLI, Astra, or any coding agent that can read files**.
+
+**No MCP. No REST API. No Dev Mode. No Figma API token. No server. No upload. No proprietary code generator.**
+
+It works as a local Figma plugin and is built for the **Figma Starter/free workflow as well as paid plans**.
+
+---
+
+## The problem
+
+Most AI design-to-code workflows give the model one of two bad inputs:
+
+1. **screenshots** — the agent can see the design, but must guess structure, spacing, assets, tokens, components, and relationships;
+2. **live API/MCP access** — richer context, but tied to authentication, usage limits, plan access, live connectivity, and a specific integration path.
+
+Figma → Agent takes a different approach:
+
+```text
+Figma design
+    ↓
+Agent Source Exporter
+    ↓
+portable design source pack
+    ↓
+your coding agent
+    ↓
+1:1 frontend implementation
+    ↓
+exact-viewport visual verification
+```
+
+Export once. Give the source to any agent. Keep the evidence with the project.
+
+---
+
+## 1:1 Figma → Frontend
+
+The workflow is designed and tested for **1:1 visual implementation** when the exported source contains the required design evidence and the coding agent follows the bundled implementation protocol.
+
+The agent does not have to reverse-engineer the interface from pixels alone. It receives:
+
+- exact reference renders;
+- original image-fill bytes;
+- SVG source for likely icons and logos;
+- serialized Figma node structure;
+- Auto Layout and constraints;
+- dimensions, fills, effects, and text data;
+- variables and modes;
 - local paint, text, effect, and grid styles;
-- components, component sets, variants, property definitions, and instance references;
+- components, component sets, variants, properties, and instances;
 - font-usage inventory;
-- serialized node structure including Auto Layout, constraints, dimensions, fills, effects, and text data;
-- a root `manifest.json` containing page/frame/asset paths and extraction warnings;
-- an `agent/README.md` inside each export containing the canonical Figma implementation skill;
-- an `agent/source-map.template.yaml` for traceable frame → source → code mapping.
+- extraction diagnostics;
+- source-to-code mapping guidance;
+- a visual QA loop that compares the implementation at the exact source viewport.
 
-The plugin requests **no network access** and is read-only with respect to the Figma document.
+The reference frame is the visual target. Structured source provides the values and relationships needed to reproduce it without guessing.
 
-## Export structure
+---
 
-A complete export looks roughly like this:
+## Quick start
+
+### 1. Download the plugin
+
+Download the latest **sideload ZIP** from [Releases](https://github.com/Ibrahim-3d/figma-agent-source-exporter/releases/latest) and extract it.
+
+### 2. Load it in Figma Desktop
+
+Open:
+
+**Plugins → Development → Import plugin from manifest…**
+
+Select the extracted `manifest.json`, then run **Agent Source Exporter**.
+
+### 3. Export your design
+
+Choose:
+
+- **Entire file** — recommended for a durable implementation handoff;
+- **Current page** — smaller focused context;
+- **Selection** — targeted component or screen work.
+
+Keep **1× exact** reference renders enabled for normal implementation work.
+
+### 4. Give the ZIP to your coding agent
+
+Unzip the export into the target project, for example:
+
+```text
+design-source/
+```
+
+Then tell the agent:
+
+```text
+Implement the target Figma screen from design-source/.
+
+Read design-source/manifest.json and design-source/agent/README.md first.
+Use the exported assets and structured source rather than approximating them.
+Render the implementation at the exact source dimensions and reconcile it
+against the matching frame reference before declaring the task complete.
+```
+
+The source pack carries its own implementation instructions, so it remains useful outside this repository.
+
+---
+
+## Figma-Driven Development
+
+**Figma-Driven Development** is a workflow where the actual Figma source drives AI implementation instead of screenshots, prose prompts, or manually recreated specifications.
+
+```text
+Design → Source → Agent → Implementation → Visual verification
+```
+
+The design is treated as implementation evidence:
+
+- **visual appearance** comes from exported frame references;
+- **exact values and relationships** come from structured source;
+- **asset identity** comes from original exported assets;
+- **implementation architecture** remains native to the target codebase;
+- **completion** requires exact-viewport visual verification.
+
+Read the full methodology: [docs/FIGMA_DRIVEN_DEVELOPMENT.md](docs/FIGMA_DRIVEN_DEVELOPMENT.md).
+
+---
+
+## Why not just use screenshots?
+
+A screenshot can show:
+
+- what the page looks like.
+
+It does not reliably tell an agent:
+
+- whether spacing is 23 px or 24 px;
+- whether a layout is Auto Layout, grid, flex, or absolute positioning;
+- which image is the original production asset;
+- which values come from variables or design tokens;
+- how component variants relate;
+- what the original SVG contains;
+- which font styles are actually used;
+- what constraints should drive responsive behavior.
+
+Figma → Agent exports both the **visual ground truth** and the **structured evidence** behind it.
+
+---
+
+## Why not require MCP or the REST API?
+
+Because the design should be portable.
+
+A source pack:
+
+- works after the Figma session is closed;
+- can be versioned with a project;
+- can be handed between people and agents;
+- does not depend on live MCP availability;
+- does not require a Personal Access Token;
+- does not require a server or bridge process;
+- does not upload the design anywhere;
+- can be consumed by any agent that can inspect files.
+
+The plugin itself requests **no network access** and is read-only with respect to the Figma document.
+
+---
+
+## What gets exported
+
+A full export contains:
 
 ```text
 my-design-source.zip
@@ -33,9 +188,7 @@ my-design-source.zip
 │   └── source-map.template.yaml
 ├── document/
 │   └── pages/
-│       ├── design-system__0_1.json
-│       ├── desktop-light__0_2.json
-│       └── ...
+│       └── *.json
 ├── tokens/
 │   ├── variables.json
 │   └── styles.json
@@ -44,24 +197,67 @@ my-design-source.zip
 ├── typography/
 │   └── fonts.json
 ├── frames/
-│   ├── desktop-light/
-│   │   └── home__123_456@1x.png
-│   └── ...
+│   └── **/*@1x.png
 └── assets/
     ├── asset-map.json
     ├── images/
-    │   └── <figma-image-hash>.<ext>
+    │   └── *
     └── svg/
-        └── <page>/<name>__<node-id>.svg
+        └── **/*.svg
 ```
 
-## Build
+The root `manifest.json` maps pages, frames, assets, export settings, counts, and extraction warnings.
+
+---
+
+## Agent implementation protocol
+
+Every exported pack includes the current implementation protocol from:
+
+`skills/figma-source-implementation/SKILL.md`
+
+The protocol instructs an agent to:
+
+1. read the source pack before editing code;
+2. map the target frame to its structured evidence and assets;
+3. inspect the existing codebase before creating components or tokens;
+4. use supplied assets exactly;
+5. translate design intent into maintainable application architecture;
+6. render at the source viewport dimensions;
+7. compare against the exported visual target;
+8. iterate until the visual result matches;
+9. report unsupported evidence rather than inventing values.
+
+This is what turns an export into an implementation workflow instead of a data dump.
+
+---
+
+## Agent compatibility
+
+There is no agent-specific runtime dependency.
+
+The source pack works with tools that can inspect local/project files, including:
+
+- OpenAI Codex;
+- Claude Code;
+- Cursor;
+- Windsurf;
+- Gemini CLI;
+- Astra;
+- local coding agents;
+- custom autonomous development workflows.
+
+The agent does **not** need a Figma connection after export.
+
+---
+
+## Build from source
 
 Requirements:
 
-- Node.js 22 recommended
-- npm
-- Figma desktop app for sideloading
+- Node.js 22 recommended;
+- npm;
+- Figma Desktop for sideloading.
 
 ```bash
 npm install
@@ -69,85 +265,83 @@ npm run typecheck
 npm run build
 ```
 
-The build creates:
+The build produces:
 
 ```text
 dist/code.js
 dist/ui.html
 ```
 
-## Sideload in Figma
-
-1. Clone or download this repository.
-2. Run `npm install && npm run build`.
-3. Open the Figma desktop app.
-4. Go to **Plugins → Development → Import plugin from manifest…**.
-5. Select the repository's `manifest.json`.
-6. Run **Agent Source Exporter**.
-7. Use **Entire file** for a durable project handoff, or Selection/Current page for smaller exports.
-8. Start with **1× exact** references unless you specifically need 2× detail.
-
-GitHub Actions also builds a reusable sideload ZIP on pushes to `main` and pull requests.
-
-## Recommended coding-agent workflow
-
-1. Export the Figma source pack.
-2. Unzip it into a non-production source-reference location such as `design-source/`.
-3. Read `manifest.json` and `agent/README.md` first.
-4. Fill `agent/source-map.template.yaml` for the target frame when the implementation is non-trivial.
-5. Use `tokens/`, `components/`, and `document/pages/` for exact structural/design-system evidence.
-6. Prefer files under `assets/` as production asset sources when appropriate.
-7. Use `frames/` as visual ground truth, never as production UI imagery.
-8. Render the implementation at the source frame dimensions and compare visually before approving regression baselines.
-
-Do **not** translate the Figma node tree literally into application code. The structured tree is evidence for values and relationships; application architecture should remain semantic and maintainable.
-
-
-## Agent integration
-
-The repository includes a canonical implementation protocol at:
-
-`skills/figma-source-implementation/SKILL.md`
-
-and a repository-level router at `AGENTS.md`.
-
-The plugin bundles the current skill body into every exported `agent/README.md`, so a source pack remains self-describing even when it is handed to an agent outside this repository.
-
-The skill defines evidence precedence, source mapping, target-codebase inspection, exact asset handling, semantic implementation rules, and an exact-viewport visual QA loop.
-
-## Development
+For development:
 
 ```bash
 npm run watch
 ```
 
-The plugin consists of:
-
-```text
-src/code.ts   # Figma plugin runtime and source extraction
-src/ui.html   # export UI, ZIP creation, and download
-build.mjs     # esbuild pipeline
-manifest.json # Figma plugin manifest
-```
-
-## Current v0.2 limitations
-
-- Large entire-file exports can consume significant Figma/UI memory because the final ZIP is assembled locally in the plugin UI.
-- SVG identification is heuristic and favors vector primitives plus nodes whose names resemble icons/logos.
-- Theme and viewport labels in the frame manifest are heuristic hints based on names and frame width, not authoritative design semantics.
-- Fonts are inventoried by family/style usage; font binaries are not extracted.
-- External library definitions can only be represented to the extent exposed by instances/main-component access in the open file.
-
-Extraction problems are recorded in the exported `manifest.json` rather than silently guessed around.
+---
 
 ## Privacy and document safety
 
-- No network domains are allowed by the plugin manifest.
-- The plugin does not create, move, edit, or delete Figma design nodes.
-- Exported source packs may contain confidential design assets and text. Treat the ZIP with the same access controls as the source Figma file.
+The architecture is deliberately local.
+
+- Figma manifest network access is set to `none`.
+- The plugin does not create, move, edit, or delete design nodes.
+- The design is not uploaded to a third-party backend.
+- Exported packs may contain confidential text and assets, so treat them with the same access controls as the source Figma file.
+
+---
+
+## Current limitations
+
+- Large entire-file exports can consume significant Figma/UI memory because the ZIP is assembled locally.
+- SVG identification is heuristic and favors vector primitives plus nodes whose names resemble icons/logos.
+- Theme and viewport labels are heuristic hints, not authoritative design semantics.
+- Fonts are inventoried by family/style usage; font binaries are not extracted.
+- External library definitions are represented only to the extent exposed through the open document and component access available to the plugin.
+- Static design source cannot by itself define product behavior that does not exist in the design or target application.
+
+Extraction problems are written to `manifest.json` rather than silently guessed around.
+
+---
+
+## Roadmap
+
+See [ROADMAP.md](ROADMAP.md).
+
+The direction is bigger than one exporter: make **Figma → Agent** a reliable, portable, open workflow for design-driven AI development.
+
+Near-term priorities include:
+
+- public 1:1 implementation benchmarks;
+- polished agent-specific workflows;
+- stronger export validation;
+- easier installation and release UX;
+- source-pack versioning and compatibility guarantees;
+- an open portable design-source specification.
+
+---
+
+## Project structure
+
+```text
+src/code.ts
+src/ui.html
+build.mjs
+manifest.json
+skills/figma-source-implementation/SKILL.md
+AGENTS.md
+```
+
+---
 
 ## Origin and license
 
-This exporter was originally developed as a standalone extension inside `Ibrahim-3d/Figma-local-MCP`, which was forked from `MiHarsh/Figma-local-MCP`. It has now been separated into its own repository so the exporter can evolve independently.
+The exporter was originally developed as a standalone extension inside `Ibrahim-3d/Figma-local-MCP`, which was forked from `MiHarsh/Figma-local-MCP`. It was separated so the source-export and agent-implementation workflow could evolve independently.
 
-The existing MIT license and upstream copyright notice are retained. See [LICENSE](LICENSE).
+MIT licensed. See [LICENSE](LICENSE).
+
+---
+
+## The idea in one line
+
+> **Figma → Agent → 1:1 Frontend.**
