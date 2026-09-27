@@ -21,9 +21,12 @@ Figma → Agent is focused on one outcome: **reliable 1:1 frontend implementatio
 
 ## Next
 
+Public tracking issue: [#2 — v0.4: Proof & Validation](https://github.com/Ibrahim-3d/figma-to-agent/issues/2)
+
+
 ### Prove 1:1 publicly
 
-- [ ] Publish reproducible Figma → frontend benchmark projects
+- [ ] [#3 Publish reproducible Figma → frontend benchmark](https://github.com/Ibrahim-3d/figma-to-agent/issues/3)
 - [ ] Add before/after visual comparisons
 - [ ] Define measurable visual acceptance criteria
 - [ ] Document screenshot-only vs source-driven implementation cases
@@ -31,17 +34,17 @@ Figma → Agent is focused on one outcome: **reliable 1:1 frontend implementatio
 ### Make onboarding trivial
 
 - [ ] Improve release/install flow
-- [ ] Add a 60-second quick-start demo
+- [ ] [#4 Add a 60-second quick-start demo](https://github.com/Ibrahim-3d/figma-to-agent/issues/4)
 - [ ] Add copy-paste prompts for major coding agents
 - [ ] Add troubleshooting for large files and incomplete source evidence
 
 ### Harden the source pack
 
-- [ ] Version the source-pack schema explicitly
+- [ ] [#5 Version and document source-pack schema v1](https://github.com/Ibrahim-3d/figma-to-agent/issues/5)
 - [ ] Add compatibility/version metadata
-- [ ] Add stronger validation for missing or broken assets
-- [ ] Improve SVG candidate detection
-- [ ] Improve large-file memory behavior
+- [ ] [#6 Add source-pack validator / preflight](https://github.com/Ibrahim-3d/figma-to-agent/issues/6)
+- [ ] [#8 Improve SVG candidate detection and diagnostics](https://github.com/Ibrahim-3d/figma-to-agent/issues/8)
+- [ ] [#7 Reduce memory pressure for large entire-file exports](https://github.com/Ibrahim-3d/figma-to-agent/issues/7)
 - [ ] Add export summaries suitable for automated agent preflight
 
 ### Agent workflows
@@ -64,7 +67,7 @@ Potential work:
 - [ ] published schema
 - [ ] validator CLI
 - [ ] source-pack diff tooling
-- [ ] visual regression hooks
+- [ ] [#9 Visual regression hooks](https://github.com/Ibrahim-3d/figma-to-agent/issues/9)
 - [ ] source-to-code traceability tooling
 - [ ] CI verification for implementation drift
 - [ ] adapters for other design tools

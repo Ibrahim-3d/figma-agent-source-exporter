@@ -1,16 +1,16 @@
 {
   "name": "figma-to-agent",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": true,
   "description": "1:1 Figma-to-frontend source export for any coding agent. No MCP, REST API, Dev Mode, token, server, or upload.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Ibrahim-3d/figma-agent-source-exporter.git"
+    "url": "git+https://github.com/Ibrahim-3d/figma-to-agent.git"
   },
-  "homepage": "https://github.com/Ibrahim-3d/figma-agent-source-exporter#readme",
+  "homepage": "https://github.com/Ibrahim-3d/figma-to-agent#readme",
   "bugs": {
-    "url": "https://github.com/Ibrahim-3d/figma-agent-source-exporter/issues"
+    "url": "https://github.com/Ibrahim-3d/figma-to-agent/issues"
   },
   "keywords": [
     "figma",
