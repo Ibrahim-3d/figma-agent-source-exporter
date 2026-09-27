@@ -1,6 +1,6 @@
 {
-  "name": "figma-agent-source-exporter",
-  "version": "0.2.0",
+  "name": "figma-to-agent",
+  "version": "0.3.0",
   "private": true,
   "description": "1:1 Figma-to-frontend source export for any coding agent. No MCP, REST API, Dev Mode, token, server, or upload.",
   "license": "MIT",
