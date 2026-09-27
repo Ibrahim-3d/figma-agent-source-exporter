@@ -2,8 +2,8 @@
 
 **1:1 Figma → Frontend with any coding agent.**
 
-[![CI](https://github.com/Ibrahim-3d/figma-agent-source-exporter/actions/workflows/ci.yml/badge.svg)](https://github.com/Ibrahim-3d/figma-agent-source-exporter/actions/workflows/ci.yml)
-[![Latest release](https://img.shields.io/github/v/release/Ibrahim-3d/figma-agent-source-exporter)](https://github.com/Ibrahim-3d/figma-agent-source-exporter/releases/latest)
+[![CI](https://github.com/Ibrahim-3d/figma-to-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/Ibrahim-3d/figma-to-agent/actions/workflows/ci.yml)
+[![Latest release](https://img.shields.io/github/v/release/Ibrahim-3d/figma-to-agent)](https://github.com/Ibrahim-3d/figma-to-agent/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 > **Stop giving AI screenshots. Give it the design.**
@@ -73,7 +73,7 @@ The reference frame is the visual target. Structured source provides the values 
 
 ### 1. Download the plugin
 
-Download the latest **sideload ZIP** from [Releases](https://github.com/Ibrahim-3d/figma-agent-source-exporter/releases/latest) and extract it.
+Download the latest **sideload ZIP** from [Releases](https://github.com/Ibrahim-3d/figma-to-agent/releases/latest) and extract it.
 
 ### 2. Load it in Figma Desktop
 
@@ -301,6 +301,19 @@ The architecture is deliberately local.
 - Static design source cannot by itself define product behavior that does not exist in the design or target application.
 
 Extraction problems are written to `manifest.json` rather than silently guessed around.
+
+---
+
+## Project & community
+
+- **Current work:** [v0.4 — Proof & Validation](https://github.com/Ibrahim-3d/figma-to-agent/issues/2)
+- **Roadmap:** [ROADMAP.md](ROADMAP.md)
+- **Releases:** [latest release](https://github.com/Ibrahim-3d/figma-to-agent/releases/latest)
+- **Contributing:** [CONTRIBUTING.md](CONTRIBUTING.md)
+- **Support:** [SUPPORT.md](SUPPORT.md)
+- **Security:** [SECURITY.md](SECURITY.md)
+
+The repository uses Issues for concrete work, bugs, and feature proposals. The v0.4 tracking issue is the public execution surface until a GitHub Project board is established.
 
 ---
 
