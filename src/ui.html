@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 16px;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 12px;
+      color: #202124;
+      background: #fff;
+    }
+    h1 { margin: 0 0 4px; font-size: 16px; }
+    .subtitle { color: #6b7280; line-height: 1.45; margin-bottom: 14px; }
+    .source {
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 14px;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+    }
+    .source strong { color: #111827; }
+    .section { margin: 14px 0; }
+    .label {
+      margin-bottom: 7px;
+      color: #6b7280;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    label.option {
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      padding: 4px 0;
+      cursor: pointer;
+      line-height: 1.35;
+    }
+    label.option input { margin-top: 1px; }
+    .hint { color: #6b7280; font-size: 11px; line-height: 1.4; }
+    .warning {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+      border-radius: 7px;
+      padding: 8px 10px;
+      margin-top: 8px;
+      font-size: 11px;
+      line-height: 1.4;
+      display: none;
+    }
+    .warning.visible { display: block; }
+    .row { display: flex; gap: 8px; align-items: center; }
+    select, input[type="text"] {
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: 7px 9px;
+      background: #fff;
+      color: #111827;
+      font: inherit;
+    }
+    input[type="text"] { width: 100%; }
+    select { min-width: 76px; }
+    .divider { height: 1px; background: #eceff1; margin: 14px 0; }
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font: inherit;
+      font-weight: 650;
+      cursor: pointer;
+    }
+    #exportBtn { background: #111827; color: #fff; }
+    #exportBtn:hover { background: #000; }
+    #exportBtn:disabled { opacity: .45; cursor: not-allowed; }
+    #cancelBtn {
+      display: none;
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+    .progress { display: none; margin-top: 10px; }
+    .progress.visible { display: block; }
+    .bar { height: 4px; border-radius: 999px; background: #e5e7eb; overflow: hidden; }
+    .bar > div { height: 100%; width: 0%; background: #111827; transition: width .12s linear; }
+    .progress-copy { display: flex; justify-content: space-between; gap: 12px; margin-top: 6px; color: #6b7280; font-size: 11px; }
+    #progressLabel { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .status {
+      display: none;
+      margin-top: 10px;
+      border-radius: 7px;
+      padding: 9px 10px;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+    .status.ok { display: block; background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+    .status.error { display: block; background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Agent Source Exporter</h1>
+  <div class="subtitle">Export the actual open Figma document into one offline ZIP for Codex, Astra, Claude Code or any coding agent. No REST API or MCP is required after export.</div>
+
+  <div class="source" id="sourceInfo">Reading current Figma source…</div>
+
+  <div class="section">
+    <div class="label">Scope</div>
+    <label class="option"><input type="radio" name="scope" value="selection" /> <span><strong>Selection</strong><br><span class="hint">Fastest. Export only selected nodes plus their referenced metadata.</span></span></label>
+    <label class="option"><input type="radio" name="scope" value="page" /> <span><strong>Current page</strong><br><span class="hint">Export every top-level node on the current page.</span></span></label>
+    <label class="option"><input type="radio" name="scope" value="file" checked /> <span><strong>Entire file</strong><br><span class="hint">Load every Figma page and create a complete coding-agent source pack.</span></span></label>
+    <div class="warning visible" id="fileWarning">Entire-file export can be large when the document contains long frames or many source images. Start at 1× reference renders; use 2× only when you need extra visual detail.</div>
+  </div>
+
+  <div class="section">
+    <div class="label">Visual ground truth</div>
+    <label class="option"><input type="checkbox" id="referenceFrames" checked /> <span>Render top-level frames as PNG</span></label>
+    <div class="row" style="margin:5px 0 2px 22px;">
+      <span class="hint">Reference scale</span>
+      <select id="referenceScale"><option value="1" selected>1× exact</option><option value="2">2× detail</option></select>
+    </div>
+    <label class="option"><input type="checkbox" id="svgs" checked /> <span>Export likely icons/logos as SVG</span></label>
+    <label class="option"><input type="checkbox" id="imageFills" checked /> <span>Export original image-fill bytes</span></label>
+  </div>
+
+  <div class="section">
+    <div class="label">Structured source</div>
+    <label class="option"><input type="checkbox" id="variables" checked /> <span>Variables and modes</span></label>
+    <label class="option"><input type="checkbox" id="styles" checked /> <span>Local paint, text, effect and grid styles</span></label>
+    <label class="option"><input type="checkbox" id="components" checked /> <span>Components, component sets, variants and instance references</span></label>
+    <label class="option"><input type="checkbox" id="fonts" checked /> <span>Font usage inventory</span></label>
+    <div class="hint" style="margin-top:5px;">Node structure, Auto Layout, constraints, dimensions, fills, effects and text data are always included.</div>
+  </div>
+
+  <div class="section">
+    <div class="label">ZIP filename</div>
+    <input id="fileName" type="text" placeholder="my-design-source" />
+  </div>
+
+  <div class="divider"></div>
+  <button id="exportBtn">Export source pack</button>
+  <button id="cancelBtn">Cancel export</button>
+
+  <div class="progress" id="progress">
+    <div class="bar"><div id="barFill"></div></div>
+    <div class="progress-copy"><span id="progressLabel">Preparing…</span><span id="progressPct"></span></div>
+  </div>
+  <div class="status" id="status"></div>
+
+<script>
+  const CRC32_TABLE = (() => {
+    const table = new Uint32Array(256);
+    for (let n = 0; n < 256; n++) {
+      let c = n;
+      for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+      table[n] = c >>> 0;
+    }
+    return table;
+  })();
+
+  function crc32(buf) {
+    let c = 0xffffffff;
+    for (let i = 0; i < buf.length; i++) c = CRC32_TABLE[(c ^ buf[i]) & 0xff] ^ (c >>> 8);
+    return (c ^ 0xffffffff) >>> 0;
+  }
+
+  const utf8 = (value) => new TextEncoder().encode(value);
+
+  function dosTime(date) {
+    return ((date.getHours() & 0x1f) << 11) | ((date.getMinutes() & 0x3f) << 5) | ((date.getSeconds() / 2) & 0x1f);
+  }
+
+  function dosDate(date) {
+    return (((date.getFullYear() - 1980) & 0x7f) << 9) | (((date.getMonth() + 1) & 0xf) << 5) | (date.getDate() & 0x1f);
+  }
+
+  // STORE-mode ZIP: PNG/JPEG/WebP are already compressed; avoiding another
+  // compression dependency keeps this sideloaded plugin entirely offline.
+  function buildZip(entries) {
+    const now = new Date();
+    const time = dosTime(now);
+    const date = dosDate(now);
+    const localParts = [];
+    const centralParts = [];
+    let offset = 0;
+
+    for (const entry of entries) {
+      const nameBytes = utf8(entry.path);
+      const data = entry.bytes;
+      const checksum = crc32(data);
+      const size = data.length;
+
+      const local = new Uint8Array(30 + nameBytes.length);
+      const lv = new DataView(local.buffer);
+      lv.setUint32(0, 0x04034b50, true);
+      lv.setUint16(4, 20, true);
+      lv.setUint16(6, 0x0800, true);
+      lv.setUint16(8, 0, true);
+      lv.setUint16(10, time, true);
+      lv.setUint16(12, date, true);
+      lv.setUint32(14, checksum, true);
+      lv.setUint32(18, size, true);
+      lv.setUint32(22, size, true);
+      lv.setUint16(26, nameBytes.length, true);
+      lv.setUint16(28, 0, true);
+      local.set(nameBytes, 30);
+      localParts.push(local, data);
+
+      const central = new Uint8Array(46 + nameBytes.length);
+      const cv = new DataView(central.buffer);
+      cv.setUint32(0, 0x02014b50, true);
+      cv.setUint16(4, 20, true);
+      cv.setUint16(6, 20, true);
+      cv.setUint16(8, 0x0800, true);
+      cv.setUint16(10, 0, true);
+      cv.setUint16(12, time, true);
+      cv.setUint16(14, date, true);
+      cv.setUint32(16, checksum, true);
+      cv.setUint32(20, size, true);
+      cv.setUint32(24, size, true);
+      cv.setUint16(28, nameBytes.length, true);
+      cv.setUint16(30, 0, true);
+      cv.setUint16(32, 0, true);
+      cv.setUint16(34, 0, true);
+      cv.setUint16(36, 0, true);
+      cv.setUint32(38, 0, true);
+      cv.setUint32(42, offset, true);
+      central.set(nameBytes, 46);
+      centralParts.push(central);
+
+      offset += local.length + data.length;
+    }
+
+    const centralStart = offset;
+    const centralSize = centralParts.reduce((sum, part) => sum + part.length, 0);
+    const eocd = new Uint8Array(22);
+    const ev = new DataView(eocd.buffer);
+    ev.setUint32(0, 0x06054b50, true);
+    ev.setUint16(4, 0, true);
+    ev.setUint16(6, 0, true);
+    ev.setUint16(8, entries.length, true);
+    ev.setUint16(10, entries.length, true);
+    ev.setUint32(12, centralSize, true);
+    ev.setUint32(16, centralStart, true);
+    ev.setUint16(20, 0, true);
+
+    const total = offset + centralSize + eocd.length;
+    const output = new Uint8Array(total);
+    let cursor = 0;
+    for (const part of localParts) { output.set(part, cursor); cursor += part.length; }
+    for (const part of centralParts) { output.set(part, cursor); cursor += part.length; }
+    output.set(eocd, cursor);
+    return output;
+  }
+
+  function formatBytes(bytes) {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+  }
+
+  function download(bytes, fileName) {
+    const blob = new Blob([bytes], { type: "application/zip" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = fileName;
+    anchor.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  const sourceInfo = document.getElementById("sourceInfo");
+  const fileName = document.getElementById("fileName");
+  const fileWarning = document.getElementById("fileWarning");
+  const exportBtn = document.getElementById("exportBtn");
+  const cancelBtn = document.getElementById("cancelBtn");
+  const progress = document.getElementById("progress");
+  const barFill = document.getElementById("barFill");
+  const progressLabel = document.getElementById("progressLabel");
+  const progressPct = document.getElementById("progressPct");
+  const status = document.getElementById("status");
+  let selectionCount = 0;
+  let exporting = false;
+
+  function scope() {
+    return document.querySelector('input[name="scope"]:checked').value;
+  }
+
+  function syncScope() {
+    const currentScope = scope();
+    fileWarning.classList.toggle("visible", currentScope === "file");
+    exportBtn.disabled = exporting || (currentScope === "selection" && selectionCount === 0);
+  }
+
+  document.querySelectorAll('input[name="scope"]').forEach((element) => element.addEventListener("change", syncScope));
+
+  exportBtn.addEventListener("click", () => {
+    if (exporting) return;
+    exporting = true;
+    exportBtn.style.display = "none";
+    cancelBtn.style.display = "block";
+    progress.classList.add("visible");
+    barFill.style.width = "0%";
+    progressLabel.textContent = "Preparing export…";
+    progressPct.textContent = "";
+    status.className = "status";
+    status.textContent = "";
+
+    parent.postMessage({
+      pluginMessage: {
+        type: "export",
+        scope: scope(),
+        fileName: fileName.value.trim() || undefined,
+        exportReferenceFrames: document.getElementById("referenceFrames").checked,
+        referenceScale: Number(document.getElementById("referenceScale").value),
+        exportSvgs: document.getElementById("svgs").checked,
+        exportImageFills: document.getElementById("imageFills").checked,
+        exportVariables: document.getElementById("variables").checked,
+        exportStyles: document.getElementById("styles").checked,
+        exportComponents: document.getElementById("components").checked,
+        exportFonts: document.getElementById("fonts").checked,
+      }
+    }, "*");
+  });
+
+  cancelBtn.addEventListener("click", () => {
+    parent.postMessage({ pluginMessage: { type: "cancel-export" } }, "*");
+    progressLabel.textContent = "Cancelling after current Figma operation…";
+  });
+
+  function finishBusy() {
+    exporting = false;
+    exportBtn.style.display = "block";
+    cancelBtn.style.display = "none";
+    progress.classList.remove("visible");
+    syncScope();
+  }
+
+  window.onmessage = (event) => {
+    const message = event.data.pluginMessage;
+    if (!message) return;
+
+    if (message.type === "selection-changed") {
+      selectionCount = message.count || 0;
+      sourceInfo.innerHTML = `<strong>${message.fileName || "Untitled"}</strong><br>Page: ${message.pageName || "Unknown"} · Selection: ${selectionCount}`;
+      if (!fileName.value && message.defaultFileName) fileName.value = message.defaultFileName;
+      syncScope();
+      return;
+    }
+
+    if (message.type === "progress") {
+      progress.classList.add("visible");
+      progressLabel.textContent = message.label || "Working…";
+      if (typeof message.current === "number" && typeof message.total === "number" && message.total > 0) {
+        const pct = Math.max(0, Math.min(100, Math.round((message.current / message.total) * 100)));
+        barFill.style.width = `${pct}%`;
+        progressPct.textContent = `${pct}%`;
+      } else {
+        progressPct.textContent = "";
+      }
+      return;
+    }
+
+    if (message.type === "export-cancelled") {
+      finishBusy();
+      status.className = "status error";
+      status.textContent = "Export cancelled. No source file was modified.";
+      return;
+    }
+
+    if (message.type !== "export-result") return;
+    finishBusy();
+
+    if (!message.success) {
+      status.className = "status error";
+      status.textContent = `Export failed: ${message.error || "Unknown error"}`;
+      return;
+    }
+
+    try {
+      const entries = message.files.map((file) => ({
+        path: file.path,
+        bytes: file.bytes
+          ? (file.bytes instanceof Uint8Array ? file.bytes : new Uint8Array(file.bytes))
+          : utf8(file.text || ""),
+      }));
+      status.className = "status ok";
+      status.textContent = `Packaging ${entries.length} files…`;
+      const zip = buildZip(entries);
+      const zipName = `${String(message.fileName || "figma-source").replace(/\.zip$/i, "")}.zip`;
+      download(zip, zipName);
+      const summary = message.summary || {};
+      status.innerHTML = `Downloaded <strong>${zipName}</strong> (${formatBytes(zip.length)}).<br>${summary.pages || 0} page(s), ${summary.frameReferences || 0} frame reference(s), ${summary.imageAssets || 0} original image(s), ${summary.svgAssets || 0} SVG(s).${message.errorCount ? `<br>⚠ ${message.errorCount} best-effort extraction warning(s) are recorded in <code>manifest.json</code>.` : ""}`;
+      parent.postMessage({ pluginMessage: { type: "download-complete", notify: `Exported ${zipName}` } }, "*");
+    } catch (error) {
+      status.className = "status error";
+      status.textContent = `ZIP packaging failed: ${error && error.message ? error.message : String(error)}`;
+    }
+  };
+
+  function reportHeight() {
+    const height = Math.ceil(document.documentElement.scrollHeight + 12);
+    parent.postMessage({ pluginMessage: { type: "resize", height } }, "*");
+  }
+  requestAnimationFrame(() => requestAnimationFrame(reportHeight));
+  if (typeof ResizeObserver !== "undefined") new ResizeObserver(reportHeight).observe(document.body);
+</script>
+</body>
+</html>
