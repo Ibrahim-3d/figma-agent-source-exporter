@@ -46,12 +46,12 @@ Figma → Agent is focused on one outcome: **reliable 1:1 frontend implementatio
 
 ### Agent workflows
 
-- [ ] Codex workflow
-- [ ] Claude Code workflow
-- [ ] Cursor workflow
-- [ ] Windsurf workflow
-- [ ] Gemini CLI workflow
-- [ ] Generic local-agent workflow
+- [x] Codex workflow
+- [x] Claude Code workflow
+- [x] Cursor workflow
+- [x] Windsurf workflow
+- [x] Gemini CLI workflow
+- [x] Generic local-agent workflow
 
 ## Later
 
