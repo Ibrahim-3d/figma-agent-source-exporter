@@ -64,30 +64,7 @@ jobs:
             exit 0
           fi
 
-          cat > package/release-notes.md <<'EOF'
-          ## Figma Agent Source Exporter v0.1.0
-
-          First standalone release of the Figma Agent Source Exporter.
-
-          ### Included
-          - Entire-file, current-page, and selection export modes
-          - Exact 1x frame reference renders with optional 2x output
-          - Original image-fill extraction
-          - SVG export for likely icons and logos
-          - Variables, modes, local styles, components, variants, and font-usage inventory
-          - Serialized Figma node structure with Auto Layout, constraints, dimensions, fills, effects, and text data
-          - Export manifest with extraction warnings
-          - Agent handoff README inside every generated source pack
-          - No plugin network access; read-only document behavior
-
-          ### Install
-          1. Download the attached sideload ZIP.
-          2. Extract it.
-          3. In Figma Desktop, open **Plugins → Development → Import plugin from manifest…**
-          4. Select the extracted `manifest.json`.
-          5. Run **Agent Source Exporter**.
-
-          Start with **1x exact** reference renders for normal coding-agent handoff.
-          EOF
-
-          gh release create "$TAG" "$ASSET#Figma Agent Source Exporter v${VERSION} — sideload ZIP"             --target "$GITHUB_SHA"             --title "Figma Agent Source Exporter v${VERSION}"             --notes-file package/release-notes.md
+          gh release create "$TAG" "$ASSET#Figma Agent Source Exporter v${VERSION} — sideload ZIP" \
+            --target "$GITHUB_SHA" \
+            --title "Figma Agent Source Exporter v${VERSION}" \
+            --generate-notes

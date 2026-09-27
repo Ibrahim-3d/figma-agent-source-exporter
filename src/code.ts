@@ -1,4 +1,6 @@
-const VERSION = "0.1.0";
+import figmaSourceImplementationSkill from "../skills/figma-source-implementation/SKILL.md";
+
+const VERSION = "0.2.0";
 
 type Scope = "selection" | "page" | "file";
 
@@ -835,8 +837,57 @@ async function collectFonts(pages: PageNode[], scope: Scope, files: OutputFile[]
   files.push(jsonFile("typography/fonts.json", { fonts: Array.from(fonts.values()).sort((a, b) => a.family.localeCompare(b.family)) }));
 }
 
+function skillBody(): string {
+  return figmaSourceImplementationSkill
+    .replace(/\r\n/g, "\n")
+    .replace(/^---\n[\s\S]*?\n---\n?/, "")
+    .trim();
+}
+
 function agentReadme(scope: Scope): string {
-  return `# Coding-agent source pack\n\nThis ZIP was generated directly from the open Figma document by Agent Source Exporter v${VERSION}. It is an offline implementation reference and does not require Figma REST/MCP access.\n\n## Source priority\n\n1. \`manifest.json\` — export scope, page/frame map, options and errors.\n2. \`document/pages/*.json\` — structured Figma node data for layout, text, paints, effects and component references.\n3. \`tokens/*.json\` — local variables/styles when enabled.\n4. \`components/index.json\` — component sets, components, instances and referenced main components when enabled.\n5. \`assets/images/*\` and \`assets/svg/*\` — original image-fill bytes and vector exports.\n6. \`frames/*\` — rendered visual ground truth for exact comparison.\n\n## Coding rule\n\nDo not translate the Figma layer tree literally into application architecture. Use structured data to recover design intent and exact values, use original assets as production inputs, and use frame renders for visual reconciliation.\n\nFor pixel QA, render the implementation at the source frame width/height recorded in \`manifest.json\`, compare it with the corresponding file under \`frames/\`, fix structural causes first, and only then approve a visual-regression baseline.\n\nExport scope: **${scope}**.\n`;
+  return `# Coding-agent source pack
+
+This ZIP was generated directly from the open Figma document by Agent Source Exporter v${VERSION}. It is an offline implementation reference and does not require Figma REST/MCP access.
+
+**Export scope:** ${scope}
+
+The operating procedure below is bundled from the repository's canonical \`skills/figma-source-implementation/SKILL.md\`. Follow it before editing application code.
+
+${skillBody()}
+`;
+}
+
+function sourceMapTemplate(): string {
+  return `# Copy this file to source-map.yaml and fill it before implementation.
+target:
+  page: ""
+  frame: ""
+  nodeId: ""
+  dimensions:
+    width: null
+    height: null
+
+references:
+  visual: ""
+  structure: ""
+  manifest: "manifest.json"
+
+assets: {}
+tokens:
+  variables: "tokens/variables.json"
+  styles: "tokens/styles.json"
+components: "components/index.json"
+
+implementation:
+  route: ""
+  component: ""
+  existingReusableComponents: []
+
+evidence:
+  manifestErrorsReviewed: false
+  unresolvedGaps: []
+  notes: []
+`;
 }
 
 async function performExport(options: ExportOptions): Promise<void> {
@@ -907,6 +958,7 @@ async function performExport(options: ExportOptions): Promise<void> {
 
   files.push(jsonFile("assets/asset-map.json", assetMap));
   files.push(textFile("agent/README.md", agentReadme(options.scope), "text/markdown"));
+  files.push(textFile("agent/source-map.template.yaml", sourceMapTemplate(), "text/yaml"));
 
   const manifest = {
     schemaVersion: 1,

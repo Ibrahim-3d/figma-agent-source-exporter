@@ -16,7 +16,8 @@ The goal is durable source handoff: export once from Figma, then let an agent in
 - font-usage inventory;
 - serialized node structure including Auto Layout, constraints, dimensions, fills, effects, and text data;
 - a root `manifest.json` containing page/frame/asset paths and extraction warnings;
-- an `agent/README.md` inside each export explaining how a coding agent should consume the pack.
+- an `agent/README.md` inside each export containing the canonical Figma implementation skill;
+- an `agent/source-map.template.yaml` for traceable frame → source → code mapping.
 
 The plugin requests **no network access** and is read-only with respect to the Figma document.
 
@@ -28,7 +29,8 @@ A complete export looks roughly like this:
 my-design-source.zip
 ├── manifest.json
 ├── agent/
-│   └── README.md
+│   ├── README.md
+│   └── source-map.template.yaml
 ├── document/
 │   └── pages/
 │       ├── design-system__0_1.json
@@ -92,12 +94,26 @@ GitHub Actions also builds a reusable sideload ZIP on pushes to `main` and pull 
 1. Export the Figma source pack.
 2. Unzip it into a non-production source-reference location such as `design-source/`.
 3. Read `manifest.json` and `agent/README.md` first.
-4. Use `tokens/`, `components/`, and `document/pages/` for exact structural/design-system evidence.
-5. Prefer files under `assets/` as production asset sources when appropriate.
-6. Use `frames/` as visual ground truth.
-7. Render the implementation at the source frame dimensions and compare visually before approving regression baselines.
+4. Fill `agent/source-map.template.yaml` for the target frame when the implementation is non-trivial.
+5. Use `tokens/`, `components/`, and `document/pages/` for exact structural/design-system evidence.
+6. Prefer files under `assets/` as production asset sources when appropriate.
+7. Use `frames/` as visual ground truth, never as production UI imagery.
+8. Render the implementation at the source frame dimensions and compare visually before approving regression baselines.
 
 Do **not** translate the Figma node tree literally into application code. The structured tree is evidence for values and relationships; application architecture should remain semantic and maintainable.
+
+
+## Agent integration
+
+The repository includes a canonical implementation protocol at:
+
+`skills/figma-source-implementation/SKILL.md`
+
+and a repository-level router at `AGENTS.md`.
+
+The plugin bundles the current skill body into every exported `agent/README.md`, so a source pack remains self-describing even when it is handed to an agent outside this repository.
+
+The skill defines evidence precedence, source mapping, target-codebase inspection, exact asset handling, semantic implementation rules, and an exact-viewport visual QA loop.
 
 ## Development
 
@@ -114,7 +130,7 @@ build.mjs     # esbuild pipeline
 manifest.json # Figma plugin manifest
 ```
 
-## Current v0.1 limitations
+## Current v0.2 limitations
 
 - Large entire-file exports can consume significant Figma/UI memory because the final ZIP is assembled locally in the plugin UI.
 - SVG identification is heuristic and favors vector primitives plus nodes whose names resemble icons/logos.

@@ -10,6 +10,7 @@ const codeBuild = {
   outfile: "dist/code.js",
   target: "es2017",
   format: "iife",
+  loader: { ".md": "text" },
 };
 
 async function buildUI() {
