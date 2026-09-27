@@ -24,7 +24,7 @@ async function main() {
     const ctx = await esbuild.context(codeBuild);
     await ctx.watch();
     await buildUI();
-    console.log("Watching Agent Source Exporter…");
+    console.log("Watching Figma → Agent exporter…");
     fs.watchFile(path.resolve("src/ui.html"), () => {
       buildUI();
       console.log("UI rebuilt");
@@ -34,7 +34,7 @@ async function main() {
 
   await esbuild.build(codeBuild);
   await buildUI();
-  console.log("Agent Source Exporter build complete");
+  console.log("Figma → Agent exporter build complete");
 }
 
 main().catch((error) => {

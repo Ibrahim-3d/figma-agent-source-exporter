@@ -38,13 +38,13 @@ jobs:
           cp -R dist package/sideload/dist
           (
             cd package/sideload
-            zip -qr "../figma-agent-source-exporter-v${VERSION}-sideload.zip" .
+            zip -qr "../figma-to-agent-v${VERSION}-sideload.zip" .
           )
 
       - name: Upload sideload package
         uses: actions/upload-artifact@v4
         with:
-          name: figma-agent-source-exporter-sideload
+          name: figma-to-agent-sideload
           path: package/*-sideload.zip
           if-no-files-found: error
           retention-days: 30
@@ -57,14 +57,14 @@ jobs:
         run: |
           VERSION="$(node -p "require('./package.json').version")"
           TAG="v${VERSION}"
-          ASSET="package/figma-agent-source-exporter-v${VERSION}-sideload.zip"
+          ASSET="package/figma-to-agent-v${VERSION}-sideload.zip"
 
           if gh release view "$TAG" >/dev/null 2>&1; then
             echo "Release $TAG already exists; leaving it unchanged."
             exit 0
           fi
 
-          gh release create "$TAG" "$ASSET#Figma Agent Source Exporter v${VERSION} — sideload ZIP" \
+          gh release create "$TAG" "$ASSET#Figma → Agent v${VERSION} — sideload ZIP" \
             --target "$GITHUB_SHA" \
-            --title "Figma Agent Source Exporter v${VERSION}" \
+            --title "Figma → Agent v${VERSION}" \
             --generate-notes

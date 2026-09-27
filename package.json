@@ -1,8 +1,8 @@
 {
-  "name": "figma-agent-source-exporter",
-  "version": "0.2.0",
+  "name": "figma-to-agent",
+  "version": "0.3.0",
   "private": true,
-  "description": "Standalone Figma plugin that exports a complete offline source pack for coding agents.",
+  "description": "1:1 Figma-to-frontend source export for any coding agent. No MCP, REST API, Dev Mode, token, server, or upload.",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -15,9 +15,20 @@
   "keywords": [
     "figma",
     "figma-plugin",
+    "figma-to-agent",
+    "figma-to-code",
+    "figma-to-frontend",
     "design-to-code",
     "coding-agent",
-    "design-export"
+    "ai-coding",
+    "claude-code",
+    "codex",
+    "cursor",
+    "mcp-alternative",
+    "design-handoff",
+    "design-source",
+    "frontend",
+    "visual-fidelity"
   ],
   "engines": {
     "node": ">=20"
