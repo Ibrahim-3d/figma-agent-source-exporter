@@ -306,6 +306,7 @@ Extraction problems are written to `manifest.json` rather than silently guessed 
 
 ## Project & community
 
+- **Status:** active v0.x development
 - **Current work:** [v0.4 — Proof & Validation](https://github.com/Ibrahim-3d/figma-to-agent/issues/2)
 - **Roadmap:** [ROADMAP.md](ROADMAP.md)
 - **Releases:** [latest release](https://github.com/Ibrahim-3d/figma-to-agent/releases/latest)
@@ -314,23 +315,6 @@ Extraction problems are written to `manifest.json` rather than silently guessed 
 - **Security:** [SECURITY.md](SECURITY.md)
 
 The repository uses Issues for concrete work, bugs, and feature proposals. The v0.4 tracking issue is the public execution surface until a GitHub Project board is established.
-
----
-
-## Roadmap
-
-See [ROADMAP.md](ROADMAP.md).
-
-The direction is bigger than one exporter: make **Figma → Agent** a reliable, portable, open workflow for design-driven AI development.
-
-Near-term priorities include:
-
-- public 1:1 implementation benchmarks;
-- polished agent-specific workflows;
-- stronger export validation;
-- easier installation and release UX;
-- source-pack versioning and compatibility guarantees;
-- an open portable design-source specification.
 
 ---
 

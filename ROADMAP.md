@@ -23,6 +23,7 @@ Figma → Agent is focused on one outcome: **reliable 1:1 frontend implementatio
 
 Public tracking issue: [#2 — v0.4: Proof & Validation](https://github.com/Ibrahim-3d/figma-to-agent/issues/2)
 
+GitHub-native repository setup that requires admin/UI actions is tracked separately in [#11 — Complete GitHub-native public surfaces](https://github.com/Ibrahim-3d/figma-to-agent/issues/11).
 
 ### Prove 1:1 publicly
 
@@ -33,7 +34,8 @@ Public tracking issue: [#2 — v0.4: Proof & Validation](https://github.com/Ibra
 
 ### Make onboarding trivial
 
-- [ ] Improve release/install flow
+- [x] Require curated product-facing release notes
+- [ ] Improve install flow
 - [ ] [#4 Add a 60-second quick-start demo](https://github.com/Ibrahim-3d/figma-to-agent/issues/4)
 - [ ] Add copy-paste prompts for major coding agents
 - [ ] Add troubleshooting for large files and incomplete source evidence
