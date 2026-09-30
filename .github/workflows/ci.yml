@@ -25,6 +25,15 @@ jobs:
           cache: npm
           cache-dependency-path: package.json
 
+      - name: Validate license metadata and attribution
+        shell: bash
+        run: |
+          node -e "if (require('./package.json').license !== 'MIT') process.exit(1)"
+          grep -Fxq 'MIT License' LICENSE
+          grep -Fxq 'Copyright (c) 2025 Graham Lipsman' LICENSE
+          grep -Fxq 'Copyright (c) 2026 Ibrahim Elrouby (original contributions)' LICENSE
+          test -s THIRD_PARTY_NOTICES.md
+
       - run: npm install --no-audit --no-fund
       - run: npm run typecheck
       - run: npm run build
@@ -34,12 +43,14 @@ jobs:
         run: |
           VERSION="$(node -p "require('./package.json').version")"
           mkdir -p package/sideload
-          cp manifest.json README.md LICENSE package/sideload/
+          cp manifest.json README.md LICENSE THIRD_PARTY_NOTICES.md package/sideload/
           cp -R dist package/sideload/dist
           (
             cd package/sideload
             zip -qr "../figma-to-agent-v${VERSION}-sideload.zip" .
           )
+          unzip -Z1 "package/figma-to-agent-v${VERSION}-sideload.zip" | grep -Fxq LICENSE
+          unzip -Z1 "package/figma-to-agent-v${VERSION}-sideload.zip" | grep -Fxq THIRD_PARTY_NOTICES.md
 
       - name: Upload sideload package
         uses: actions/upload-artifact@v4
